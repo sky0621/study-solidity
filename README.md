@@ -15,3 +15,9 @@ npx hardhat
 ```
 
 
+## memo
+
+```
+export $(cat .env | xargs)
+```
+

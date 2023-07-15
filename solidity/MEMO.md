@@ -1,4 +1,0 @@
-
-```
-export $(cat .env | xargs)
-```
