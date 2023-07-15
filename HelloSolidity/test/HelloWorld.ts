@@ -3,10 +3,12 @@ import { ethers } from "hardhat";
 
 describe("HelloWorld contract", function () {
     it('getMessage returns HelloWorld', async function () {
-        const HelloWorld = await ethers.getContractFactory("HelloWorld")
-        const helloworld=await HelloWorld.deploy()
+        const [owner] = await ethers.getSigners()
 
-        console.log(await helloworld.getAddress())
-        expect(await helloworld.getMessage()).to.eq("Hello World")
+        const hardhatHelloWorld = await ethers.deployContract("HelloWorld")
+        await hardhatHelloWorld.waitForDeployment()
+
+        const msg = await hardhatHelloWorld.getMessage()
+        expect(msg).to.eq("Hello World")
     });
 })
