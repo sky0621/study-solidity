@@ -14,6 +14,17 @@ npm install --save-dev hardhat
 npx hardhat
 ```
 
+## compile
+
+```
+npx hardhat compile
+```
+
+## test
+
+```
+npx hardhat test
+```
 
 ## memo
 
