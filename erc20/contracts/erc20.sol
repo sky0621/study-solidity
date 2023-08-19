@@ -6,7 +6,8 @@ contract ERC20 {
     string private _name;
     string private _symbol;
     uint8 private _decimals;
-    address public _owner;  // temporary public
+    address private _owner;
+    mapping(address => uint256) private _balances;
 
     constructor (string memory name_, string memory symbol_, uint8 decimals_) {
         _name = name_;
@@ -29,5 +30,23 @@ contract ERC20 {
 
     function totalSupply() external view returns (uint256) {
         return _totalSupply;
+    }
+
+    function balanceOf(address account) external view returns (uint256) {
+        return _balances[account];
+    }
+
+    function mint(address account, uint256 amount) external {
+        require(msg.sender == _owner, "only contract owner can call mint");
+        require(account != address(0), "mint to the zero address is not allowed");
+        _totalSupply = _totalSupply + amount;
+        _balances[account] = _balances[account] + amount;
+    }
+
+    function burn(address account, uint256 amount) external {
+        require(msg.sender == _owner, "only contract owner can call burn");
+        require(account != address(0), "burn to the zero address is not allowed");
+        _totalSupply = _totalSupply - amount;
+        _balances[account] = _balances[account] - amount;
     }
 }
