@@ -9,6 +9,8 @@ contract ERC20 {
     address private _owner;
     mapping(address => uint256) private _balances;
 
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
     constructor (string memory name_, string memory symbol_, uint8 decimals_) {
         _name = name_;
         _symbol = symbol_;
@@ -41,6 +43,7 @@ contract ERC20 {
         require(account != address(0), "mint to the zero address is not allowed");
         _totalSupply = _totalSupply + amount;
         _balances[account] = _balances[account] + amount;
+        emit Transfer(address(0), account, amount);
     }
 
     function burn(address account, uint256 amount) external {
@@ -48,5 +51,16 @@ contract ERC20 {
         require(account != address(0), "burn to the zero address is not allowed");
         _totalSupply = _totalSupply - amount;
         _balances[account] = _balances[account] - amount;
+        emit Transfer(account, address(0), amount);
+    }
+
+    function transfer(address recipient, uint amount) external returns (bool) {
+        require(recipient != address(0), "transfer to the zero address is not allowed");
+        address sender = msg.sender;
+        require(_balances[sender] >= amount, "transfer amount cannot exceed balance");
+        _balances[sender] = _balances[sender] - amount;
+        _balances[recipient] = _balances[recipient] + amount;
+        emit Transfer(sender, recipient, amount);
+        return true;
     }
 }

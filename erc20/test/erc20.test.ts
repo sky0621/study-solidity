@@ -10,6 +10,19 @@ async function deployContractsFixture() {
     return {erc20, account0, account1, account2}
 }
 
+async function deployMintContractsFixture() {
+    const [account0, account1, account2] = await ethers.getSigners();
+    const ERC20 = await ethers.getContractFactory("ERC20", account0);
+    const erc20 = await ERC20.deploy("Zenny", "ZNY", 18);
+    await erc20.waitForDeployment()
+
+    const balance1: bigint = 10n * (10n ** 18n);
+    const tx = await erc20.mint(account1.address, balance1)
+    await tx.wait();
+
+    return {erc20, account0, account1, account2, balance1}
+}
+
 describe("ERC20 contract states", function () {
     it("getters", async function () {
         const {erc20} = await loadFixture(deployContractsFixture)
@@ -64,5 +77,18 @@ describe("ERC20 mint", function () {
 
         await erc20.mint(account1.address, uint256Max)
         await expect(erc20.mint(account1.address, 1)).to.be.revertedWithPanic(0x11)
+    })
+})
+
+describe("ERC20 transfer", function () {
+    it("transfer and Transfer event", async function () {
+        const {erc20, account0, account1, account2, balance1} = await loadFixture(deployMintContractsFixture)
+        const decimals = await erc20.decimals()
+        const amount: bigint = 7n * (10n ** decimals)
+        await expect(erc20.connect(account1).transfer(account2.address, amount))
+            .to.emit(erc20, "Transfer").withArgs(account1.address, account2.address, amount)
+
+        expect(await erc20.balanceOf(account1.address)).to.equal(balance1 - amount)
+        expect(await erc20.balanceOf(account2.address)).to.equal(amount)
     })
 })
