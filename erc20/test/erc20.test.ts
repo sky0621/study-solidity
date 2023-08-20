@@ -92,3 +92,4 @@ describe("ERC20 transfer", function () {
         expect(await erc20.balanceOf(account2.address)).to.equal(amount)
     })
 })
+

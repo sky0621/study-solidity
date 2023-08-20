@@ -8,8 +8,10 @@ contract ERC20 {
     uint8 private _decimals;
     address private _owner;
     mapping(address => uint256) private _balances;
+    mapping(address => mapping(address => uint256)) private _allowances;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
 
     constructor (string memory name_, string memory symbol_, uint8 decimals_) {
         _name = name_;
@@ -38,6 +40,10 @@ contract ERC20 {
         return _balances[account];
     }
 
+    function allowance(address owner, address spender) external view returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
     function mint(address account, uint256 amount) external {
         require(msg.sender == _owner, "only contract owner can call mint");
         require(account != address(0), "mint to the zero address is not allowed");
@@ -63,4 +69,28 @@ contract ERC20 {
         emit Transfer(sender, recipient, amount);
         return true;
     }
+
+    function approve(address spender, uint256 amount) external returns (bool) {
+        require(spender != address(0), "approve to the zero address is not allowed");
+        address owner = msg.sender;
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
+        return true;
+    }
+
+    function transferFrom(address sender, address recipient, uint amount) external returns (bool) {
+        require(recipient != address(0), "transfer to the zero address is not allowed");
+        require(_balances[sender] >= amount, "transfer amount cannot exceed balance");
+        _balances[sender] = _balances[sender] - amount;
+        _balances[recipient] = _balances[recipient] + amount;
+        emit Transfer(sender, recipient, amount);
+
+        address spender = msg.sender;
+        require(_allowances[sender][spender] >= amount, "insufficient allowance");
+        _allowances[sender][spender] = _allowances[sender][spender] - amount;
+        emit Approval(sender, spender, _allowances[sender][spender]);
+
+        return true;
+    }
+
 }
