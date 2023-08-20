@@ -26,6 +26,10 @@ npx hardhat compile
 npx hardhat test
 ```
 
+```
+npx hardhat coverage
+```
+
 ## memo
 
 ```

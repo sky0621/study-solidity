@@ -93,3 +93,45 @@ describe("ERC20 transfer", function () {
     })
 })
 
+describe("ERC20 approve and transferFrom", function () {
+    it("allowance and approve", async function () {
+        const {erc20, account0, account1, account2, balance1} = await loadFixture(deployMintContractsFixture)
+
+        expect(await erc20.allowance(account1.address, account2.address)).to.equal(0)
+
+        const amount = 123;
+        expect(await erc20.connect(account1).approve(account2.address, amount))
+            .to.emit(erc20, "Approve").withArgs(account1.address, account2.address, amount)
+
+        expect(await erc20.allowance(account1.address, account2.address)).to.equal(amount)
+    })
+
+    it("transferFrom", async function () {
+        const {erc20, account0, account1, account2, balance1} = await loadFixture(deployMintContractsFixture)
+
+        // account2 は account1 の口座から allowance 分の送金ができる設定
+        const allowance = 3n * balance1;
+        await erc20.connect(account1).approve(account2.address, allowance)
+
+        // account2 は account1 の口座から account0 の口座に balance1 分の送金をする
+        expect(await erc20.connect(account2).transferFrom(account1.address, account0.address, balance1))
+            .to.emit(erc20, "Approval").withArgs(account1.address, account2.address, allowance - balance1)
+            .to.emit(erc20, "Transfer").withArgs(account1.address, account0.address, balance1)
+
+        // account2 が account1 の口座から送金可能な額は allowance - balance1 分に減ったことの確認
+        expect(await erc20.allowance(account1.address, account2.address)).to.equal(allowance - balance1)
+        expect(await erc20.balanceOf(account0.address)).to.equal(balance1)
+        // deployMintContractsFixture により account1 には balance1 分の balance が初期セットされていたので、
+        // balance1 分が account0 に送金されたあとは 0
+        expect(await erc20.balanceOf(account1.address)).to.equal(0)
+        expect(await erc20.balanceOf(account2.address)).to.equal(0)
+    })
+
+    it("transferFrom insufficient allowance", async function () {
+        const {erc20, account0, account1, account2, balance1} = await loadFixture(deployMintContractsFixture)
+
+        await erc20.connect(account1).approve(account2.address, 1);
+
+        await expect(erc20.connect(account2).transferFrom(account1.address, account0.address, balance1)).to.be.revertedWith("insufficient allowance")
+    })
+})
