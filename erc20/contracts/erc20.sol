@@ -4,13 +4,13 @@ pragma solidity ^0.8.19;
 import "./interfaces/ierc20.sol";
 
 contract ERC20 is IERC20 {
-    uint256 private _totalSupply;
+    uint private _totalSupply;
     string private _name;
     string private _symbol;
     uint8 private _decimals;
     address private _owner;
-    mapping(address => uint256) private _balances;
-    mapping(address => mapping(address => uint256)) private _allowances;
+    mapping(address => uint) private _balances;
+    mapping(address => mapping(address => uint)) private _allowances;
 
     constructor (string memory name_, string memory symbol_, uint8 decimals_) {
         _name = name_;
@@ -31,19 +31,19 @@ contract ERC20 is IERC20 {
         return _decimals;
     }
 
-    function totalSupply() external view returns (uint256) {
+    function totalSupply() external view returns (uint) {
         return _totalSupply;
     }
 
-    function balanceOf(address account) external view returns (uint256) {
+    function balanceOf(address account) external view returns (uint) {
         return _balances[account];
     }
 
-    function allowance(address owner, address spender) external view returns (uint256) {
+    function allowance(address owner, address spender) external view returns (uint) {
         return _allowances[owner][spender];
     }
 
-    function mint(address account, uint256 amount) external {
+    function mint(address account, uint amount) external {
         require(msg.sender == _owner, "only contract owner can call mint");
         require(account != address(0), "mint to the zero address is not allowed");
         _totalSupply = _totalSupply + amount;
@@ -51,7 +51,7 @@ contract ERC20 is IERC20 {
         emit Transfer(address(0), account, amount);
     }
 
-    function burn(address account, uint256 amount) external {
+    function burn(address account, uint amount) external {
         require(msg.sender == _owner, "only contract owner can call burn");
         require(account != address(0), "burn to the zero address is not allowed");
         _totalSupply = _totalSupply - amount;
@@ -69,7 +69,7 @@ contract ERC20 is IERC20 {
         return true;
     }
 
-    function approve(address spender, uint256 amount) external returns (bool) {
+    function approve(address spender, uint amount) external returns (bool) {
         require(spender != address(0), "approve to the zero address is not allowed");
         address owner = msg.sender;
         _allowances[owner][spender] = amount;
