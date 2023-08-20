@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.19;
 
-contract ERC20 {
+import "./interfaces/ierc20.sol";
+
+contract ERC20 is IERC20 {
     uint256 private _totalSupply;
     string private _name;
     string private _symbol;
@@ -9,9 +11,6 @@ contract ERC20 {
     address private _owner;
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
-
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
 
     constructor (string memory name_, string memory symbol_, uint8 decimals_) {
         _name = name_;

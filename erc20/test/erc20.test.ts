@@ -23,7 +23,7 @@ async function deployMintContractsFixture() {
     return {erc20, account0, account1, account2, balance1}
 }
 
-describe("ERC20 contract states", function () {
+describe("erc20.sol contract states", function () {
     it("getters", async function () {
         const {erc20} = await loadFixture(deployContractsFixture)
 
@@ -34,7 +34,7 @@ describe("ERC20 contract states", function () {
     })
 })
 
-describe("ERC20 mint", function () {
+describe("erc20.sol mint", function () {
     it("mint", async function () {
         const {erc20, account0, account1, account2} = await loadFixture(deployContractsFixture)
 
@@ -80,7 +80,7 @@ describe("ERC20 mint", function () {
     })
 })
 
-describe("ERC20 transfer", function () {
+describe("erc20.sol transfer", function () {
     it("transfer and Transfer event", async function () {
         const {erc20, account0, account1, account2, balance1} = await loadFixture(deployMintContractsFixture)
         const decimals = await erc20.decimals()
@@ -93,7 +93,7 @@ describe("ERC20 transfer", function () {
     })
 })
 
-describe("ERC20 approve and transferFrom", function () {
+describe("erc20.sol approve and transferFrom", function () {
     it("allowance and approve", async function () {
         const {erc20, account0, account1, account2, balance1} = await loadFixture(deployMintContractsFixture)
 
