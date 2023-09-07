@@ -9,7 +9,19 @@ contract ERC20 is IERC20 {
     string private _symbol;
     uint8 private _decimals;
     address private _owner;
+    // {
+    //   "0x1a2b3c4d5e...1": "100000",
+    //   "0x1a2b3c4d5e...2": "200000",
+    // }
     mapping(address => uint) private _balances;
+    // {
+    //   // owner = amount の所有者
+    //   "0x6p7q8r9s0t...1": {
+    //     // spender = owner から許可を受けて amount を消費する人
+    //     "0x1a2b3c4d5e...1": "1000",
+    //     "0x1a2b3c4d5e...2": "2000",
+    //   }
+    // }
     mapping(address => mapping(address => uint)) private _allowances;
 
     constructor (string memory name_, string memory symbol_, uint8 decimals_) {

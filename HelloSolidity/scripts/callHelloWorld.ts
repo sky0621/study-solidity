@@ -17,7 +17,7 @@ async function main(address: string) {
     console.log(message)
 }
 
-const address = "0xB0745f25d411a13C10616281e4042C996E3b9501"
+const address = "0xf0383D915106D6B2a8ABfddD9098C6f473D5D1B2"
 main(address).catch((err) => {
     console.error(err);
     process.exitCode = 1
