@@ -44,15 +44,15 @@ at erc20/
 ts-node scripts/deploy.ts --name SkyToken --symbol SKYT --decimals 18
 ```
 
-ERC20 contract deploy address 0x7629AB8DcD7a07a8Eb299F5f983b6024c530536c
-Transaction URL: https://sepolia.etherscan.io/tx/0x72e7345da4d25f47775f5ab6aab45ac53d81a09b0dc24ed4e2538aa06451582b
+ERC20 contract deploy address 0x01dFDC3F63410540D130D779677E6077e5e403Da
+Transaction URL: https://sepolia.etherscan.io/tx/0x97cb0af0c91de10634f3b18535c4386e80dca329b3744eacad98e94bc07c9507
 
 #### mint original token
 
 at erc20/
 
 ```
-ts-node scripts/mint.ts --network sepolia --contractAddress 0x7629AB8DcD7a07a8Eb299F5f983b6024c530536c --accountAddress 0x99999999 --amount 150
+ts-node scripts/mint.ts --network sepolia --contractAddress 0x01dFDC3F63410540D130D779677E6077e5e403Da --accountAddress 0x99999999 --amount 150
 ```
 
 ## install
