@@ -47,7 +47,7 @@ async function main(network: string, contractAddress: string, accountAddress: st
     const contract = new ethers.Contract(contractAddress, erc20Artifacts.abi, signer)
     const decimals: bigint = await contract.decimals();
     console.log("decimals: ", decimals)
-    const rawAmount: bigint = BigInt(BigInt(Math.floor(amount)) * (10n ** decimals))
+    const rawAmount: bigint = BigInt(amount) * (10n ** decimals)
     console.log("rawAmount: ", rawAmount)
     const tx = await contract.mint(accountAddress, rawAmount)
     console.log(`Transaction URL: ${transactionExploreUrl(network, tx.hash)}`)
